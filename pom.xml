@@ -56,7 +56,7 @@
                             <directory>${project.basedir}/src/main/frontend/node_modules/</directory>
                         </fileset>
                         <fileset>
-                            <directory>${project.basedir}/src/main/frontend/build/</directory>
+                            <directory>${project.basedir}/src/main/frontend/dist/</directory>
                         </fileset>
                     </filesets>
                 </configuration>
@@ -118,7 +118,7 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/classes/static/">
-                                    <fileset dir="${project.basedir}/src/main/frontend/build/" includes="**/*" />
+                                    <fileset dir="${project.basedir}/src/main/frontend/dist/" includes="**/*" />
                                 </copy>
                             </target>
                         </configuration>
