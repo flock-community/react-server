@@ -1,9 +1,10 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const client = require('./webpack.client.js');
+const server = require('./webpack.server.js');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const common = require('./webpack.common.js');
 
-module.exports = merge(common, {
+const production = {
     plugins: [
         new UglifyJSPlugin({
             sourceMap: true
@@ -12,4 +13,9 @@ module.exports = merge(common, {
             'process.env.NODE_ENV': JSON.stringify('production')
         })
     ]
-});
+};
+
+const hydrate = merge(client, production);
+const ssr = merge(server, production);
+
+module.exports = [hydrate, ssr];
