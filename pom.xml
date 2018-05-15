@@ -25,6 +25,10 @@
         <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
         <!-- https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+
+        <frontend.path>${project.basedir}/src/main/frontend</frontend.path>
+        <frontend-node_modules.path>${frontend.path}/node_modules</frontend-node_modules.path>
+        <frontend-dist-path>${frontend.path}/dist</frontend-dist-path>
     </properties>
 
     <dependencies>
@@ -48,68 +52,6 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>${maven-clean-plugin.version}</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${project.basedir}/src/main/frontend/node_modules/</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>${project.basedir}/src/main/frontend/dist/</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>${frontend-maven-plugin.version}</version>
-                <configuration>
-                    <workingDirectory>src/main/frontend</workingDirectory>
-                    <installDirectory>target</installDirectory>
-                </configuration>
-
-                <executions>
-
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <configuration>
-                            <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
-                            <nodeVersion>v8.11.1</nodeVersion>
-                            <npmVersion>5.6.0</npmVersion>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>npm install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <!-- Optional configuration which provides for running any npm command -->
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>npm run build</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run build</arguments>
-                        </configuration>
-                    </execution>
-
-                </executions>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
@@ -118,13 +60,15 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/classes/static/">
-                                    <fileset dir="${project.basedir}/src/main/frontend/dist/" includes="**/*" />
+                                    <fileset dir="${frontend-dist-path}" includes="**/*"/>
                                 </copy>
                                 <copy todir="${project.build.directory}/classes/vendor/">
-                                    <fileset dir="${project.basedir}/src/main/frontend/node_modules/babel-standalone" includes="babel.js" />
+                                    <fileset dir="${frontend-node_modules.path}/babel-standalone"
+                                             includes="babel.js"/>
                                 </copy>
                                 <copy todir="${project.build.directory}/classes/vendor/">
-                                    <fileset dir="${project.basedir}/src/main/frontend/node_modules/babel-polyfill/dist" includes="polyfill.js" />
+                                    <fileset dir="${frontend-node_modules.path}/babel-polyfill/dist"
+                                             includes="polyfill.js"/>
                                 </copy>
                             </target>
                         </configuration>
@@ -134,8 +78,83 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>frontend</id>
+            <activation>
+                <file>
+                    <missing>src/main/frontend/dist/server.bundle.js</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>${maven-clean-plugin.version}</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${frontend-node_modules.path}</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>${frontend-dist-path}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                        <configuration>
+                            <workingDirectory>src/main/frontend</workingDirectory>
+                            <installDirectory>target</installDirectory>
+                        </configuration>
+
+                        <executions>
+
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
+                                    <nodeVersion>v8.11.1</nodeVersion>
+                                    <npmVersion>5.6.0</npmVersion>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <!-- Optional configuration which provides for running any npm command -->
+                                <configuration>
+                                    <arguments>install</arguments>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>npm run build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
+
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

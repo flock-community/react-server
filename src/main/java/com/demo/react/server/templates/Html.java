@@ -10,24 +10,29 @@ import java.util.regex.Pattern;
 @Component
 public class Html {
 
-    private String left;
-    private String right;
+    private String left = "";
+    private String right = "";
 
     public Html() {
-        InputStream in = getClass().getClassLoader().getResourceAsStream("static/index.html");
-        Scanner s = new Scanner(in).useDelimiter("\\A");
-        String index = s.hasNext() ? s.next() : "";
+        String index = read("static/index.html");
         String regex = "[\\s\\S]+<div id=\"root\">";
-        Pattern p = Pattern.compile(regex);
-        Matcher matcher = p.matcher(index);
-        matcher.find();
-        left = matcher.group(0);
-        String[] split = index.split(regex);
-        right = split[1];
+
+        Matcher matcher = Pattern.compile(regex).matcher(index);
+        if (matcher.find()) {
+            left = matcher.group(0);
+            right = index.split(regex)[1];
+        }
+
     }
 
     public String getIndex(String element) {
         return left + element + right;
+    }
+
+    private String read(String path) {
+        InputStream in = getClass().getClassLoader().getResourceAsStream(path);
+        Scanner s = new Scanner(in).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
 }

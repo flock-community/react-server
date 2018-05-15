@@ -1,5 +1,6 @@
 package com.demo.react.server.endpoints;
 
+import com.demo.react.server.runtime.Element;
 import com.demo.react.server.runtime.JavaScriptRuntime;
 import com.demo.react.server.templates.Html;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ public class demo {
 
     @GetMapping("/")
     public String getDemo() {
-        return html.getIndex(runtime.get());
+        String body = runtime.get(Element.GAME);
+        return html.getIndex(body);
     }
 
 }
