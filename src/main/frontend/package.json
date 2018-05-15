@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-standalone": "^6.26.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   },

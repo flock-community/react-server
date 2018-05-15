@@ -1,7 +1,4 @@
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-
-import Game from './dist/server.bundle.js';
+import {React, Game, renderToString} from './dist/server.bundle.js';
 import Html from './src/Html';
 
 module.exports = function (server) {
@@ -10,4 +7,4 @@ module.exports = function (server) {
             Html(renderToString(<Game />))
         );
     });
-}
+};

@@ -4,7 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = merge(common, {
     entry: {
-        server: './src/Game.js'
+        server: './src/server.js'
     },
     module: {
         rules: [
@@ -16,9 +16,5 @@ module.exports = merge(common, {
     },
     output: {
         libraryTarget: 'commonjs2'
-    },
-    target: 'node',
-    externals: [
-        nodeExternals()
-    ]
+    }
 });

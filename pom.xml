@@ -120,6 +120,12 @@
                                 <copy todir="${project.build.directory}/classes/static/">
                                     <fileset dir="${project.basedir}/src/main/frontend/dist/" includes="**/*" />
                                 </copy>
+                                <copy todir="${project.build.directory}/classes/vendor/">
+                                    <fileset dir="${project.basedir}/src/main/frontend/node_modules/babel-standalone" includes="babel.js" />
+                                </copy>
+                                <copy todir="${project.build.directory}/classes/vendor/">
+                                    <fileset dir="${project.basedir}/src/main/frontend/node_modules/babel-polyfill/dist" includes="polyfill.js" />
+                                </copy>
                             </target>
                         </configuration>
                         <goals>

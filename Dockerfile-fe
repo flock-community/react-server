@@ -5,4 +5,4 @@ WORKDIR /app
 ### Install npm packages global
 RUN npm i -g rimraf
 
-EXPOSE 4000
+EXPOSE 8080
