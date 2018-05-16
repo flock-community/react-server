@@ -12,12 +12,12 @@ be-build:
 
 be-run:
 	docker run -p 8080:8080 -it --name backend --rm -v $(shell pwd):/app -v ~/.m2:/root/.m2 react-server-be bash
-.PHONY: be-dev
+.PHONY: be-run
 
 stack-build:
-	docker build -f Dockerfile-full -t react-server-stack .
+	docker build -f Dockerfile-stack -t react-server-stack .
 .PHONY: stack-build
 
 stack-run:
-	docker run -p 8080:8080 --name stack --rm react-server-stack
+	docker run -p 8080:8080 -it --name stack --rm react-server-stack
 .PHONY: stack-run

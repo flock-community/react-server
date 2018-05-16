@@ -10,16 +10,16 @@ Scripts
 ### For Windows powershell:
 
 ```
-.\make.ps1 fe build
-.\make.ps1 fe run
+.\make.ps1 fe-build
+.\make.ps1 fe-run
 ```
 ```
-.\make.ps1 be build
-.\make.ps1 be run
+.\make.ps1 be-build
+.\make.ps1 be-run
 ```
 ```
-.\make.ps1 stack build
-.\make.ps1 stack run
+.\make.ps1 stack-build
+.\make.ps1 stack-run
 ```
 ---
 ### For Linux or Mac:

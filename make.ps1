@@ -1,40 +1,59 @@
+# This file reads the Makefile and tries to convert it to sensible Windows commands
+
 param (
     [parameter(Position=0)]
-    [ValidateSet('stack', 'fe', 'be')]
-    [String]$stackOrFrontend=$(throw "Full stack (stack), Backend (be), or Frontend (fe)? Example: .\make.ps1 stack build"),
-
-    [parameter(Position=1)]
-    [ValidateSet('build', 'run')]
-    [String]$buildOrRun=$(throw "Build (build) or Run (run)? Example: .\make.ps1 stack run")
+    [ValidateSet('fe-build', 'be-build', 'stack-build', 'fe-run', 'be-run', 'stack-run', 'help')]
+    [String]$argument=$(throw "Full stack (stack), Backend (be), or Frontend (fe)? Build (-build) or Run (-run)? Example: .\make.ps1 stack-build")
 )
 
-$currentDir = Split-Path $MyInvocation.MyCommand.Path
+$unixFeDir = '/src/main/frontend'
+$unixMavenDir = '~/.m2'
+$unixCurrentDir = '$(shell pwd)'
 
-$buildStack    = 'docker build -f Dockerfile-full -t react-server-full .'
-$buildFrontend = 'docker build -f Dockerfile-fe -t react-server-fe .'
-$buildBackend  = 'docker build -f Dockerfile-be -t react-server-be .'
-$runStack      = 'docker run -p 8080:8080 --name stack --rm react-server-full'
-$runFrontend   = 'docker run -p 8080:8080 -it --name frontend --rm -v ' + $currentDir + '\src\main\frontend:/app react-server-fe bash'
-$runBackend    = 'docker run -p 8080:8080 -it --name backend --rm -v ' + $currentDir + ':/app react-server-be bash'
+function slash([string]$path) {
+    return $path.replace('/', '\')
+}
 
-if ($buildOrRun -eq 'build' -And $stackOrFrontend -eq 'stack') {
+$winFeDir = slash($unixFeDir)
+$winMavenDir = slash($unixMavenDir)
+$winCurrentDir = Split-Path $MyInvocation.MyCommand.Path
+
+$makeFile = Get-Content -Path ./Makefile | Where-Object { $_ -match 'docker' }
+
+function transformUnixToWin ([string]$command) {
+    return $command.replace($unixCurrentDir, '' + $winCurrentDir + '').replace($unixFeDir, $winFeDir).replace($unixMavenDir, $winMavenDir).Trim()
+}
+
+$buildStack    = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-stack' })
+$buildFrontend = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-fe' })
+$buildBackend  = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-be' })
+$runStack      = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-stack' })
+$runFrontend   = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-fe' })
+$runBackend    = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-be' })
+
+if ($argument -eq 'stack-build') {
     Write-Output $buildStack
     Invoke-Expression $buildStack
-} elseif ($buildOrRun -eq 'build' -And $stackOrFrontend -eq 'fe') {
+} elseif ($argument -eq 'fe-build') {
     Write-Output $buildFrontend
     Invoke-Expression $buildFrontend
-} elseif ($buildOrRun -eq 'build' -And $stackOrFrontend -eq 'be') {
+} elseif ($argument -eq 'be-build') {
     Write-Output $buildBackend
     Invoke-Expression $buildBackend
-} elseif ($buildOrRun -eq 'run' -And $stackOrFrontend -eq 'stack') {
+} elseif ($argument -eq 'stack-run') {
     Write-Output $runStack
     Invoke-Expression $runStack
-} elseif ($buildOrRun -eq 'run' -And $stackOrFrontend -eq 'fe') {
+} elseif ($argument -eq 'fe-run') {
     Write-Output $runFrontend
     Invoke-Expression $runFrontend
-} elseif ($buildOrRun -eq 'run' -And $stackOrFrontend -eq 'be') {
+} elseif ($argument -eq 'be-run') {
     Write-Output $runBackend
     Invoke-Expression $runBackend
 } else {
-    Write-Output 'Yolo!'
+    Write-Output $buildStack
+    Write-Output $buildFrontend
+    Write-Output $buildBackend
+    Write-Output $runStack
+    Write-Output $runFrontend
+    Write-Output $runBackend
 }
