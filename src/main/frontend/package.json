@@ -29,7 +29,7 @@
     "xml-loader": "^1.2.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --port 4000 --config webpack.dev.js",
+    "start": "webpack-dev-server --host 0.0.0.0 --port 8080 --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "clean": "rimraf node_modules && rimraf dist",
     "serve": "node server.js"
