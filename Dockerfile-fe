@@ -3,6 +3,6 @@ FROM node:9
 WORKDIR /app
 
 ### Install npm packages global
-RUN npm i -g rimraf
+RUN npm i -g npm rimraf
 
 EXPOSE 8080
