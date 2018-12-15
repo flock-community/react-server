@@ -2,13 +2,15 @@ package com.demo.react.server.runtime
 
 import com.demo.react.server.utils.Utils.read
 import jdk.nashorn.api.scripting.NashornScriptEngine
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 import javax.script.SimpleBindings
 
 @Component
-class JavaScriptRuntime {
+@Profile("!graal")
+class Nashorn : RenderState {
 
     private val nashorn = ScriptEngineManager().getEngineByName("nashorn") as NashornScriptEngine
     private val babelBindings = SimpleBindings()
@@ -25,9 +27,9 @@ class JavaScriptRuntime {
         }
     }
 
-    operator fun get(element: Element) = render(element)
+    override operator fun get(element: Element) = render(element)
 
-    private fun render(element: Element): String {
+    override fun render(element: Element): String {
         return try {
             nashorn.eval(babelTransform("renderToString(" + element.html + ");")) as String
         } catch (e: ScriptException) {
@@ -36,7 +38,7 @@ class JavaScriptRuntime {
         }
     }
 
-    private fun babelTransform(reactSnippet: String): String {
+    override fun babelTransform(reactSnippet: String): String {
         return try {
             babelBindings["input"] = reactSnippet
             nashorn.eval("Babel.transform(input, { presets: ['react' ] }).code", babelBindings) as String
@@ -45,5 +47,7 @@ class JavaScriptRuntime {
             ""
         }
     }
+
+    override fun identity() = "Nashorn"
 
 }

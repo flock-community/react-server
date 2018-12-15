@@ -26,7 +26,9 @@
 
         <!-- Dependencies -->
         <org.json.version>20180130</org.json.version>
+        <graal-polyglot.version>1.0.0-rc7</graal-polyglot.version>
         <graal-truffle.version>1.0.0-rc9</graal-truffle.version>
+
         <!-- Frontend - See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
         <node.version>v8.12.0</node.version>
         <npm.version>6.4.1</npm.version>
@@ -55,6 +57,16 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.graalvm</groupId>
+            <artifactId>polyglot-tck</artifactId>
+            <version>${graal-polyglot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.truffle</groupId>
+            <artifactId>truffle-api</artifactId>
+            <version>${graal-truffle.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -64,6 +76,10 @@
     </dependencies>
 
     <build>
+
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -108,30 +124,16 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>${kotlin.version}</version>
+
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
+                        <goals> <goal>compile</goal> </goals>
                     </execution>
+
                     <execution>
                         <id>test-compile</id>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
+                        <goals> <goal>test-compile</goal> </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -212,8 +214,8 @@
                                 </goals>
                                 <configuration>
                                     <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
-                                    <nodeVersion>v8.11.1</nodeVersion>
-                                    <npmVersion>5.6.0</npmVersion>
+                                    <nodeVersion>${node.version}</nodeVersion>
+                                    <npmVersion>${npm.version}</npmVersion>
                                 </configuration>
                             </execution>
 

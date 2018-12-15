@@ -14,6 +14,14 @@ be-run:
 	docker run -p 8081:8080 -it --name backend --rm -v $(shell pwd):/app -v ~/.m2:/root/.m2 react-server-be bash
 .PHONY: be-run
 
+graal-build:
+	docker build -f Dockerfile-graal -t react-server-graal .
+.PHONY: graal-build
+
+graal-run:
+	docker run -p 8081:8080 -it --name graal --rm -v $(shell pwd):/app -v ~/.m2:/root/.m2 react-server-graal bash
+.PHONY: graal-run
+
 stack-build:
 	docker build -f Dockerfile-stack -t react-server-stack .
 .PHONY: stack-build

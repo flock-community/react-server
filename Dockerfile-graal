@@ -1,0 +1,12 @@
+FROM oracle/graalvm-ce:1.0.0-rc9
+
+RUN yum install -y wget && \
+    wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo && \
+    yum install -y apache-maven
+
+ENV PATH="/opt/graalvm-ce-1.0.0-rc9/bin/:${PATH}"
+ENV spring_profiles_active=graal
+
+WORKDIR /app
+
+EXPOSE 8080
