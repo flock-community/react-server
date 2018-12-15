@@ -21,7 +21,7 @@ class Nashorn : RenderState {
             nashorn.eval(read("vendor/polyfill.js"))
             nashorn.eval(read("vendor/babel.js"), babelBindings)
             nashorn.eval(read("static/server.bundle.js"))
-            nashorn.eval("var React = module.exports.React; var renderToString = module.exports.renderToString; var " + Element.GAME.tag + " = module.exports." + Element.GAME.tag + ";")
+            nashorn.eval("var React = module.exports.React; var renderToString = module.exports.renderToString; var ${Element.GAME.tag} = module.exports.${Element.GAME.tag};")
         } catch (e: ScriptException) {
             e.printStackTrace()
         }
@@ -31,7 +31,7 @@ class Nashorn : RenderState {
 
     override fun render(element: Element): String {
         return try {
-            nashorn.eval(babelTransform("renderToString(" + element.html + ");")) as String
+            nashorn.eval(babelTransform("renderToString(${element.html});")) as String
         } catch (e: ScriptException) {
             e.printStackTrace()
             ""

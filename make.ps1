@@ -2,8 +2,8 @@
 
 param (
     [parameter(Position=0)]
-    [ValidateSet('fe-build', 'be-build', 'stack-build', 'fe-run', 'be-run', 'stack-run', 'help')]
-    [String]$argument=$(throw "Full stack (stack), Backend (be), or Frontend (fe)? Build (-build) or Run (-run)? Example: .\make.ps1 stack-build")
+    [ValidateSet('stack-build', 'graal-build', 'be-build', 'fe-build', 'stack-run', 'graal-run', 'be-run', 'fe-run', 'help')]
+    [String]$argument=$(throw "Argument needed, for example: .\make.ps1 stack-build")
 )
 
 $unixFeDir = '/src/main/frontend'
@@ -20,40 +20,40 @@ $winCurrentDir = Split-Path $MyInvocation.MyCommand.Path
 
 $makeFile = Get-Content -Path ./Makefile | Where-Object { $_ -match 'docker' }
 
-function transformUnixToWin ([string]$command) {
+function transformDirFromUnixToWin ([string]$command) {
     return $command.replace($unixCurrentDir, '' + $winCurrentDir + '').replace($unixFeDir, $winFeDir).replace($unixMavenDir, $winMavenDir).Trim()
 }
 
-$buildStack    = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-stack' })
-$buildFrontend = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-fe' })
-$buildBackend  = transformUnixToWin($makeFile | Where-Object { $_ -match 'build.*?-be' })
-$runStack      = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-stack' })
-$runFrontend   = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-fe' })
-$runBackend    = transformUnixToWin($makeFile | Where-Object { $_ -match 'run.*?-be' })
+function makeForWindows([string]$command) {
+    return transformDirFromUnixToWin($makeFile | Where-Object { $_ -match $command })
+}
 
-if ($argument -eq 'stack-build') {
-    Write-Output $buildStack
-    Invoke-Expression $buildStack
-} elseif ($argument -eq 'fe-build') {
-    Write-Output $buildFrontend
-    Invoke-Expression $buildFrontend
-} elseif ($argument -eq 'be-build') {
-    Write-Output $buildBackend
-    Invoke-Expression $buildBackend
-} elseif ($argument -eq 'stack-run') {
-    Write-Output $runStack
-    Invoke-Expression $runStack
-} elseif ($argument -eq 'fe-run') {
-    Write-Output $runFrontend
-    Invoke-Expression $runFrontend
-} elseif ($argument -eq 'be-run') {
-    Write-Output $runBackend
-    Invoke-Expression $runBackend
-} else {
-    Write-Output $buildStack
-    Write-Output $buildFrontend
-    Write-Output $buildBackend
-    Write-Output $runStack
-    Write-Output $runFrontend
-    Write-Output $runBackend
+function invoke([string]$command) {
+    $make = makeForWindows($command)
+    Write-Output $make
+    Invoke-Expression $make
+}
+
+switch ($argument) {
+    'stack-build' { invoke('build.*?-stack') }
+    'graal-build' { invoke('build.*?-graal') }
+    'be-build'    { invoke('build.*?-be')    }
+    'fe-build'    { invoke('build.*?-fe')    }
+    'stack-run'   { invoke('run.*?-stack')   }
+    'graal-run'   { invoke('run.*?-graal')   }
+    'be-run'      { invoke('run.*?-be')      }
+    'fe-run'      { invoke('run.*?-fe')      }
+    default       {
+        Write-Output "Use one of these commands:
+
+        stack-build
+        graal-build
+        be-build
+        fe-build
+        stack-run
+        graal-run
+        be-run
+        fe-run
+        "
+    }
 }

@@ -15,10 +15,7 @@ class Demo(
 ) {
 
     @GetMapping
-    fun getDemo(): String {
-        val body = runtime[Element.GAME]
-        return html.getIndex(body)
-    }
+    fun getRoot() = html.getIndex(runtime[Element.GAME])
 
     @GetMapping("id")
     fun getIdentity() = runtime.identity()

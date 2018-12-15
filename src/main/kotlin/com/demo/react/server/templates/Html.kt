@@ -21,7 +21,6 @@ class Html {
             left = matcher.group(0)
             right = index.split(regex.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
         }
-
     }
 
     fun getIndex(element: String) = "$left$element$right"
