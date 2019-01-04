@@ -3,7 +3,7 @@ require('babel-register')({
 });
 
 const express = require('express');
-const render = require('./render')
+const render = require('./render');
 
 const port = 8080;
 const server = express();
