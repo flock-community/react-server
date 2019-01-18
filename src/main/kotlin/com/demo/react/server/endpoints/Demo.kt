@@ -17,6 +17,9 @@ class Demo(
     @GetMapping
     fun getRoot() = html.getIndex(runtime[Element.GAME])
 
+    @GetMapping("client")
+    fun getClient() = html.getIndex("")
+
     @GetMapping("id")
     fun getIdentity() = runtime.identity()
 
