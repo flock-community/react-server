@@ -43,5 +43,5 @@ stack-build:
 .PHONY: stack-build
 
 stack-run:
-	docker run -p 8080:8080 -d --name stack --rm react-server-stack
+	docker run -p 80:80 -d --name stack --rm react-server-stack
 .PHONY: stack-run
