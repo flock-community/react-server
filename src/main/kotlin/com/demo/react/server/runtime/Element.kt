@@ -1,11 +1,14 @@
 package com.demo.react.server.runtime
 
-enum class Element(val tag: String) {
+enum class Element(
+        val tag: String
+) {
 
-    GAME("Game");
+    GAME("Game"),
+    APP("App");
 
-    val html: String = "<$tag/>"
+    fun html(): String = "<$tag/>"
 
-    override fun toString() = html
+    override fun toString() = html()
 
 }

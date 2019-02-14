@@ -2,10 +2,9 @@
 import { resolve } from 'path';
 import { js, clientCss } from './rules';
 import { NODE_ENV_ANALYZE, NODE_ENV_DEV, NODE_ENV_PROD } from './const';
-// import { uglify } from './plugins';
+import { html } from './plugins';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const mode = [NODE_ENV_ANALYZE, NODE_ENV_PROD]
@@ -15,7 +14,8 @@ module.exports = {
   mode,
 
   entry: {
-    client: [resolve(__dirname, '../src/client.js')],
+    game: [resolve(__dirname, '../src/client.game.js')],
+    app: [resolve(__dirname, '../src/client.app.js')],
   },
 
   context: resolve(__dirname, '../src'),
@@ -35,10 +35,8 @@ module.exports = {
         new CleanWebpackPlugin([resolve(__dirname, '../dist')], {
           root: resolve(__dirname, '../')
         }),
-        new HtmlWebpackPlugin({
-          title: 'Server side Rendering the Tic Tac Toe tutorial',
-          template: resolve(__dirname, '../src/index.html')
-        }),
+        html('game'),
+        html('app'),
         new MiniCssExtractPlugin({
           filename: '[name].css',
           chunkFilename: '[id].css'

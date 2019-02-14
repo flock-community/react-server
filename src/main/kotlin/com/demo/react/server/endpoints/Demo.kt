@@ -14,11 +14,14 @@ class Demo(
         private val html: Html
 ) {
 
-    @GetMapping
-    fun getRoot() = html.getIndex(runtime[Element.GAME])
+    @GetMapping("game")
+    fun getRoot() = html.getSimpleIndex(runtime[Element.GAME, false])
 
-    @GetMapping("client")
-    fun getClient() = html.getIndex("")
+    @GetMapping("game/client")
+    fun getClient() = html.getSimpleIndex("")
+
+    @GetMapping("app")
+    fun getApp() = html.getMaterialUIindex(runtime[Element.APP, true])
 
     @GetMapping("id")
     fun getIdentity() = runtime.identity()

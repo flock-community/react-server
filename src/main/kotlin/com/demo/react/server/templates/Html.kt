@@ -3,26 +3,17 @@ package com.demo.react.server.templates
 import com.demo.react.server.utils.Utils.read
 import org.springframework.stereotype.Component
 
-import java.util.Scanner
-import java.util.regex.Pattern
-
 @Component
 class Html {
 
-    private var left = ""
-    private var right = ""
+    private val indexGame = read("static/index.game.html")
+    private val indexApp = read("static/index.app.html")
+    private val regex = Regex("[\\s\\S]+<div id=\"root\">")
 
-    init {
-        val index = read("static/index.html")
-        val regex = "[\\s\\S]+<div id=\"root\">"
+    fun getSimpleIndex(element: String) = html(indexGame, element)
 
-        val matcher = Pattern.compile(regex).matcher(index)
-        if (matcher.find()) {
-            left = matcher.group(0)
-            right = index.split(regex.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-        }
-    }
+    fun getMaterialUIindex(element: String) = html(indexApp, element)
 
-    fun getIndex(element: String) = "$left$element$right"
+    private fun html(index: String, body: String) = "${regex.find(index)?.value}$body${regex.split(index)[1]}"
 
 }

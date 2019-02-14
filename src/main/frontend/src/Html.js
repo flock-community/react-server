@@ -1,13 +1,21 @@
 const fs = require('fs');
 
-require.extensions['.html'] = function(module, filename) {
+require.extensions['.html'] = function (module, filename) {
     module.exports = fs.readFileSync(filename, 'utf-8');
 };
 
-const html = require('../dist/index.html');
+const gameIndex = require('../dist/index.game.html');
+const appIndex = require('../dist/index.app.html');
 
 const regex = /[\s\S]+<div id="root">/;
-const left = html.match(regex)[0];
-const right = html.split(regex)[1];
 
-module.exports = ( body ) => `${left}${body}${right}`;
+module.exports = {
+    game: body => html(gameIndex, body),
+    app: body => html(appIndex, body)
+};
+
+function html(index, body) {
+    const left = index.match(regex)[0];
+    const right = index.split(regex)[1];
+    return `${left}${body}${right}`;
+}

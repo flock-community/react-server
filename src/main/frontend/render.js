@@ -1,10 +1,16 @@
-import {React, Game, renderToString} from './dist/server.bundle.js';
-import Html from './src/Html';
+import {React, Game, App, renderToString} from './dist/server.bundle.js';
+import {game, app} from './src/Html';
 
 module.exports = function (server) {
-    server.get('/', (req, res) => {
+    server.get('/game', (req, res) => {
         res.send(
-            Html(renderToString(<Game />))
+            game(renderToString(<Game />))
+        );
+    });
+
+    server.get('/app', (req, res) => {
+        res.send(
+            app(renderToString(<App />))
         );
     });
 };
