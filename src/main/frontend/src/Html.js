@@ -11,7 +11,7 @@ const regex = /[\s\S]+<div id="root">/;
 
 module.exports = {
     game: body => html(gameIndex, body),
-    app: body => html(appIndex, body)
+    app: (body, css) => html(appIndex, `${body}</div><style id="jss-server-side">${css}</style>`)
 };
 
 function html(index, body) {

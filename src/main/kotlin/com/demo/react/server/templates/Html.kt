@@ -12,7 +12,7 @@ class Html {
 
     fun getSimpleIndex(element: String) = html(indexGame, element)
 
-    fun getMaterialUIindex(element: String) = html(indexApp, element)
+    fun getMaterialUIindex(element: String, css: String) = html(indexApp, "$element</div><style id=\"jss-server-side\">$css</style>")
 
     private fun html(index: String, body: String) = "${regex.find(index)?.value}$body${regex.split(index)[1]}"
 

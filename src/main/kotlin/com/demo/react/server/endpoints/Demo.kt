@@ -21,7 +21,7 @@ class Demo(
     fun getClient() = html.getSimpleIndex("")
 
     @GetMapping("app")
-    fun getApp() = html.getMaterialUIindex(runtime[Element.APP, true])
+    fun getApp() = html.getMaterialUIindex(runtime[Element.APP, true], runtime.css())
 
     @GetMapping("id")
     fun getIdentity() = runtime.identity()

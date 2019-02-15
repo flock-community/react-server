@@ -23,13 +23,13 @@ class JavaScriptRuntime(private val engine: RenderState) : RenderState {
     private fun renderSimple(element: Element) = eval(babelTransform("renderToString(${element.html()})"))
 
     private fun render(element: Element) = eval(babelTransform("""
-//        var sheetsRegistry = new SheetsRegistry();
+        var sheetsRegistry = new SheetsRegistry();
         renderToString(
-//            <JssProvider registry={sheetsRegistry} generateClassName={createGenerateClassName()}>
-//                <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
+            <JssProvider registry={sheetsRegistry} generateClassName={createGenerateClassName()}>
+                <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
                     ${element.html()}
-//                </MuiThemeProvider>
-//            </JssProvider>
+                </MuiThemeProvider>
+            </JssProvider>
         );
     """))
 

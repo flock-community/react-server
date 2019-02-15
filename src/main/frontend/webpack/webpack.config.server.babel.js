@@ -1,9 +1,9 @@
 /* eslint one-var: ["error", "never"] */
 import webpack from 'webpack';
-import { join, resolve } from 'path';
-import { js, serverCss } from './rules';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { NODE_ENV_ANALYZE, NODE_ENV_DEV, NODE_ENV_PROD } from './const';
+import {join, resolve} from 'path';
+import {files, js, serverCss} from './rules';
+import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
+import {NODE_ENV_ANALYZE, NODE_ENV_DEV, NODE_ENV_PROD} from './const';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 
 const mode = [NODE_ENV_ANALYZE, NODE_ENV_PROD]
@@ -33,20 +33,21 @@ const conf = {
   // uglify plugin is optional. But doesn't give much extra compression
   // and is prone to errors (learnings from the past).
   plugins: NODE_ENV_ANALYZE === process.env.NODE_ENV
-    ? [new BundleAnalyzerPlugin({ analyzerHost: '0.0.0.0' })]
+    ? [new BundleAnalyzerPlugin({analyzerHost: '0.0.0.0'})]
     : [
-        new UglifyJSPlugin({
-          sourceMap: true
-        }),
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('production')
-        })
-      ],
+      new UglifyJSPlugin({
+        sourceMap: true
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+      })
+    ],
 
   module: {
     rules: [
       js,
       serverCss,
+      files,
     ],
   },
 

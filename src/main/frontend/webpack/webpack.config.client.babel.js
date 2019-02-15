@@ -1,9 +1,9 @@
 /* eslint one-var: ["error", "never"] */
-import { resolve } from 'path';
-import { js, clientCss } from './rules';
-import { NODE_ENV_ANALYZE, NODE_ENV_DEV, NODE_ENV_PROD } from './const';
-import { html } from './plugins';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import {resolve} from 'path';
+import {clientCss, files, js} from './rules';
+import {NODE_ENV_ANALYZE, NODE_ENV_DEV, NODE_ENV_PROD} from './const';
+import {html} from './plugins';
+import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
@@ -30,23 +30,24 @@ module.exports = {
   // uglify plugin is optional. But doesn't give much extra compression
   // and is prone to errors (learnings from the past).
   plugins: NODE_ENV_ANALYZE === process.env.NODE_ENV
-    ? [new BundleAnalyzerPlugin({ analyzerHost: '0.0.0.0' })]
+    ? [new BundleAnalyzerPlugin({analyzerHost: '0.0.0.0'})]
     : [
-        new CleanWebpackPlugin([resolve(__dirname, '../dist')], {
-          root: resolve(__dirname, '../')
-        }),
-        html('game'),
-        html('app'),
-        new MiniCssExtractPlugin({
-          filename: '[name].css',
-          chunkFilename: '[id].css'
-        })
-      ],
+      new CleanWebpackPlugin([resolve(__dirname, '../dist')], {
+        root: resolve(__dirname, '../')
+      }),
+      html('game'),
+      html('app'),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css'
+      })
+    ],
 
   module: {
     rules: [
       js,
       clientCss,
+      files,
     ],
   },
 
